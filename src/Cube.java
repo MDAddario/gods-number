@@ -1,17 +1,18 @@
 public class Cube {
 
     // Faces of the cube
-    private byte[]  whiteFace;
-    private byte[]    redFace;
-    private byte[]  greenFace;
-    private byte[] yellowFace;
-    private byte[]   blueFace;
-    private byte[] orangeFace;
+    byte[]  whiteFace;
+    byte[]    redFace;
+    byte[]  greenFace;
+    byte[] yellowFace;
+    byte[]   blueFace;
+    byte[] orangeFace;
 
     // Types of rotations
-    private static final byte CW   = 1;
-    private static final byte HALF = 2;
-    private static final byte CCW  = 3;
+    static final byte ID   = 0;
+    static final byte CW   = 1;
+    static final byte HALF = 2;
+    static final byte CCW  = 3;
 
     // Rotate two bytes
     private static void twoCycle(byte[] faceOne, int indexOne, byte[] faceTwo, int indexTwo) {
@@ -27,7 +28,10 @@ public class Cube {
                                   byte rotationType) {
 
         // The four bytes should be listed as when read clockwise!!
-        if (rotationType == CW) {
+        if (rotationType == ID) {
+            return;
+        }
+        else if (rotationType == CW) {
             byte temp             = faceOne  [indexOne];
             faceOne  [indexOne]   = faceFour [indexFour];
             faceFour [indexFour]  = faceThree[indexThree];
@@ -46,7 +50,7 @@ public class Cube {
         }
     }
 
-    private static void fourCycle(byte[] face, int one, int two, int three, int four, byte rotationType) {
+    static void fourCycle(byte[] face, int one, int two, int three, int four, byte rotationType) {
         fourCycle(face, one, face, two, face, three, face, four, rotationType);
     }
 
@@ -76,26 +80,29 @@ public class Cube {
     void U (byte rotationType) {
         rotateFace(whiteFace, redFace, greenFace, orangeFace, blueFace, rotationType);
     }
-
     void R (byte rotationType) {
         rotateFace(redFace, greenFace, whiteFace, blueFace, yellowFace, rotationType);
     }
-
     void F (byte rotationType) {
         rotateFace(greenFace, whiteFace, redFace, yellowFace, orangeFace, rotationType);
     }
-
     void D (byte rotationType) {
         rotateFace(yellowFace, blueFace, orangeFace, greenFace, redFace, rotationType);
     }
-
     void L (byte rotationType) {
         rotateFace(orangeFace, yellowFace, blueFace, whiteFace, greenFace, rotationType);
     }
-
     void B (byte rotationType) {
         rotateFace(blueFace, orangeFace, yellowFace, redFace, whiteFace, rotationType);
     }
+
+    // More overloading!
+    void U() { U(CW); }
+    void R() { R(CW); }
+    void F() { F(CW); }
+    void D() { D(CW); }
+    void L() { L(CW); }
+    void B() { B(CW); }
 
     // Default constructor
     Cube() {
@@ -105,12 +112,12 @@ public class Cube {
     }
 
     // Color definitions
-    private static final byte WHITE  = 0;
-    private static final byte RED    = 1;
-    private static final byte GREEN  = 2;
-    private static final byte YELLOW = 3;
-    private static final byte BLUE   = 4;
-    private static final byte ORANGE = 5;
+    static final byte WHITE  = 0;
+    static final byte RED    = 1;
+    static final byte GREEN  = 2;
+    static final byte YELLOW = 3;
+    static final byte BLUE   = 4;
+    static final byte ORANGE = 5;
 
     // Setup initial faces
     private void setupInitialFaces() {
@@ -143,5 +150,10 @@ public class Cube {
                     this.yellowFace[i] != YELLOW || this.blueFace[i] != BLUE || this.orangeFace[i] != ORANGE)
                 return false;
         return true;
+    }
+
+    // Method for imageIO
+    void saveImage() {
+        ImageProcessing.saveCubeImage(this);
     }
 }
