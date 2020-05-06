@@ -1,4 +1,4 @@
-public class Cube {
+class Cube {
 
     // Faces of the cube
     byte[]  whiteFace;
@@ -8,11 +8,11 @@ public class Cube {
     byte[]   blueFace;
     byte[] orangeFace;
 
-    // Types of rotations
-    static final byte ID   = 0;
-    static final byte CW   = 1;
-    static final byte HALF = 2;
-    static final byte CCW  = 3;
+    // Types of rotations (number of -90 degree rotations)
+    static final byte ID   = 0;  // Identity
+    static final byte CW   = 1;  // Clockwise
+    static final byte HALF = 2;  // Half-turn
+    static final byte CCW  = 3;  // Counter clockwise
 
     // Rotate two bytes
     private static void twoCycle(byte[] faceOne, int indexOne, byte[] faceTwo, int indexTwo) {
@@ -95,14 +95,6 @@ public class Cube {
     void B (byte rotationType) {
         rotateFace(blueFace, orangeFace, yellowFace, redFace, whiteFace, rotationType);
     }
-
-    // More overloading!
-    void U() { U(CW); }
-    void R() { R(CW); }
-    void F() { F(CW); }
-    void D() { D(CW); }
-    void L() { L(CW); }
-    void B() { B(CW); }
 
     // Default constructor
     Cube() {
