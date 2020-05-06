@@ -5,8 +5,8 @@ class Cube {
     byte[]    redFace;
     byte[]  greenFace;
     byte[] yellowFace;
-    byte[]   blueFace;
     byte[] orangeFace;
+    byte[]   blueFace;
 
     // Types of rotations (number of -90 degree rotations)
     static final byte ID   = 0;  // Identity
@@ -108,8 +108,8 @@ class Cube {
     static final byte RED    = 1;
     static final byte GREEN  = 2;
     static final byte YELLOW = 3;
-    static final byte BLUE   = 4;
-    static final byte ORANGE = 5;
+    static final byte ORANGE = 4;
+    static final byte BLUE   = 5;
 
     // Setup initial faces
     private void setupInitialFaces() {
@@ -119,8 +119,8 @@ class Cube {
         this.   redFace = new byte[8];
         this. greenFace = new byte[8];
         this.yellowFace = new byte[8];
-        this.  blueFace = new byte[8];
         this.orangeFace = new byte[8];
+        this.  blueFace = new byte[8];
 
         // Paint the faces
         for (int i = 0; i < 8; i++) {
@@ -128,8 +128,8 @@ class Cube {
             this.   redFace[i] = RED;
             this. greenFace[i] = GREEN;
             this.yellowFace[i] = YELLOW;
-            this.  blueFace[i] = BLUE;
             this.orangeFace[i] = ORANGE;
+            this.  blueFace[i] = BLUE;
         }
     }
 
@@ -138,8 +138,8 @@ class Cube {
 
         // Paint the faces
         for (int i = 0; i < 8; i++)
-            if (    this. whiteFace[i] != WHITE  || this. redFace[i] != RED  || this. greenFace[i] != GREEN ||
-                    this.yellowFace[i] != YELLOW || this.blueFace[i] != BLUE || this.orangeFace[i] != ORANGE)
+            if (    this. whiteFace[i] != WHITE  || this.   redFace[i] != RED    || this.greenFace[i] != GREEN ||
+                    this.yellowFace[i] != YELLOW || this.orangeFace[i] != ORANGE || this. blueFace[i] != BLUE)
                 return false;
         return true;
     }
@@ -147,5 +147,9 @@ class Cube {
     // Method for imageIO
     void saveImage() {
         ImageProcessing.saveCubeImage(this);
+    }
+
+    abstract class Rotation {
+
     }
 }

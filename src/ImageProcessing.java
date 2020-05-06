@@ -14,8 +14,8 @@ class ImageProcessing {
     private static final int[]    RED_PIXEL = {255,   0,   0};
     private static final int[]  GREEN_PIXEL = {  0, 255,   0};
     private static final int[] YELLOW_PIXEL = {255, 255,   0};
-    private static final int[]   BLUE_PIXEL = {  0,   0, 255};
     private static final int[] ORANGE_PIXEL = {255, 165,   0};
+    private static final int[]   BLUE_PIXEL = {  0,   0, 255};
     private static final int[]    BGD_PIXEL = {100, 100, 100};
 
     // Pick a pixel color from the tile color
@@ -25,8 +25,8 @@ class ImageProcessing {
         else if (color == Cube.RED)    return    RED_PIXEL;
         else if (color == Cube.GREEN)  return  GREEN_PIXEL;
         else if (color == Cube.YELLOW) return YELLOW_PIXEL;
-        else if (color == Cube.BLUE)   return   BLUE_PIXEL;
         else if (color == Cube.ORANGE) return ORANGE_PIXEL;
+        else if (color == Cube.BLUE)   return   BLUE_PIXEL;
         else throw new IllegalArgumentException("Pixel specified has no registered color.");
     }
 
@@ -72,16 +72,16 @@ class ImageProcessing {
         paintCubeFace(raster, cube.   redFace, Cube.HALF, 3, 6);
         paintCubeFace(raster, cube. greenFace, Cube.ID,   6, 3);
         paintCubeFace(raster, cube.yellowFace, Cube.ID,   3, 9);
-        paintCubeFace(raster, cube.  blueFace, Cube.CCW,  0, 3);
         paintCubeFace(raster, cube.orangeFace, Cube.CCW,  3, 0);
+        paintCubeFace(raster, cube.  blueFace, Cube.CCW,  0, 3);
 
         // Color the centers
         raster.setPixel( 4, 4,  WHITE_PIXEL);
         raster.setPixel( 7, 4,    RED_PIXEL);
         raster.setPixel( 4, 7,  GREEN_PIXEL);
         raster.setPixel(10, 4, YELLOW_PIXEL);
-        raster.setPixel( 4, 1,   BLUE_PIXEL);
         raster.setPixel( 1, 4, ORANGE_PIXEL);
+        raster.setPixel( 4, 1,   BLUE_PIXEL);
 
         // Write to file
         try {
