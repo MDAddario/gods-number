@@ -63,16 +63,19 @@ class Cube {
         faceTwo[indexTwo] = temp;
     }
 
+    // Ensure rotation type is valid
+    private static boolean isValidRotation( byte rotationType ) { return 0 <= rotationType && rotationType <= 3; }
+
     // Rotate four bytes
     private static void fourCycle(byte[] faceOne,   int indexOne,   byte[] faceTwo,  int indexTwo,
                                   byte[] faceThree, int indexThree, byte[] faceFour, int indexFour,
                                   byte rotationType) {
 
+        if (!isValidRotation(rotationType))
+            throw new IllegalArgumentException("Rotation type argument is not valid.");
+
         // The four bytes should be listed as when read clockwise!!
-        if (rotationType == ID) {
-            return;
-        }
-        else if (rotationType == CW) {
+        if (rotationType == CW) {
             byte temp             = faceOne  [indexOne];
             faceOne  [indexOne]   = faceFour [indexFour];
             faceFour [indexFour]  = faceThree[indexThree];
@@ -85,9 +88,6 @@ class Cube {
         else if (rotationType == HALF) {
             twoCycle(faceOne, indexOne, faceThree, indexThree);
             twoCycle(faceTwo, indexTwo, faceFour,  indexFour);
-        }
-        else {
-            throw new IllegalArgumentException("Rotation type argument is not valid.");
         }
     }
 
@@ -170,15 +170,36 @@ class Cube {
         this.rotations[BLUE]   = new   BlueRotation();
     }
 
+    // Check to see if the face index is valid
+    private static boolean isValidFace(byte faceIndex) { return 0 <= faceIndex && faceIndex < 6; }
+
     // Perform any possible rotation
     void rotate(byte faceIndex, byte rotationType) {
 
         // Ensure face index is valid
-        if (!(0 <= faceIndex && faceIndex < 6))
+        if (!isValidFace(faceIndex))
             throw new IllegalArgumentException("Face index argument is illegal.");
 
         // Perform the rotation
         this.rotations[faceIndex].rotate(rotationType);
+    }
+
+    // Revert any rotation
+    void undoRotate(byte faceIndex, byte rotationType) {
+
+        // Ensure face index is valid
+        if (!isValidFace(faceIndex))
+            throw new IllegalArgumentException("Face index argument is illegal.");
+
+        // Perform the inverse rotation
+        if (rotationType == CW)
+            this.rotations[faceIndex].rotate(CCW);
+        else if (rotationType == HALF)
+            this.rotations[faceIndex].rotate(HALF);
+        else if (rotationType == CCW)
+            this.rotations[faceIndex].rotate(CW);
+        else
+            throw new IllegalArgumentException("Rotation type argument is not valid.");
     }
 
     // Well defined rotation names in the speed-cubing community
