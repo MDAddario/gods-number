@@ -1,4 +1,36 @@
-public class Search {
+import java.util.ArrayList;
+
+class Search {
+
+    private static class Move {
+
+        private byte faceIndex;
+        private byte rotationType;
+
+        private Move(byte faceIndex, byte rotationType) {
+            this.faceIndex    = faceIndex;
+            this.rotationType = rotationType;
+        }
+
+        @Override
+        public String toString() {
+
+            StringBuilder output = new StringBuilder();
+
+            if      (this.faceIndex == Cube.WHITE)  output.append("U");
+            else if (this.faceIndex == Cube.RED)    output.append("R");
+            else if (this.faceIndex == Cube.GREEN)  output.append("F");
+            else if (this.faceIndex == Cube.YELLOW) output.append("D");
+            else if (this.faceIndex == Cube.ORANGE) output.append("L");
+            else if (this.faceIndex == Cube.BLUE)   output.append("B");
+
+            if      (this.rotationType == Cube.CW)   output.append(" ");
+            else if (this.rotationType == Cube.HALF) output.append("2 ");
+            else if (this.rotationType == Cube.CCW)  output.append("' ");
+
+            return output.toString();
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -17,16 +49,22 @@ public class Search {
     }
 
     // Wrapper for brute force search
-    static void startSearch(Cube cube, int maxPly) {
-        bruteForce(cube, 0, maxPly, (byte)-1);
+    private static void startSearch(Cube cube, int maxPly) {
+
+        // Create an array list to track the moves
+        ArrayList<Move> moveList = new ArrayList<>();
+
+        // Begin the search
+        bruteForce(cube, 0, maxPly, (byte)-1, moveList);
     }
 
     // Brute force search all possible scrambles
-    private static void bruteForce(Cube cube, int ply, int maxPly, byte lastFace) {
+    private static void bruteForce(Cube cube, int ply, int maxPly, byte lastFace, ArrayList<Move> moveList) {
 
         // Check if the cube is solved
         if (cube.isSolved()) {
             System.out.println("Cube solved after " + ply + " moves.\n");
+            System.out.println(moveList);
             return;
         }
 
@@ -54,12 +92,14 @@ public class Search {
 
                 // Rotate
                 cube.rotate(faceIndex, rotationType);
+                moveList.add(new Move(faceIndex, rotationType));
 
                 // Search new state
-                bruteForce(cube, ply + 1, maxPly, faceIndex);
+                bruteForce(cube, ply + 1, maxPly, faceIndex, moveList);
 
                 // Undo rotation
                 cube.undoRotate(faceIndex, rotationType);
+                moveList.remove(moveList.size() - 1);
             }
         }
     }
