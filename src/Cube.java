@@ -8,80 +8,93 @@ public class Cube {
     private byte[]   blueFace;
     private byte[] orangeFace;
 
-    // Rotate four bytes in a clockwise manner
-    private static void fourCycleCW(byte[] faceOne,   int indexOne,   byte[] faceTwo,  int indexTwo,
-                                    byte[] faceThree, int indexThree, byte[] faceFour, int indexFour) {
+    // Types of rotations
+    private static final byte CW   = 1;
+    private static final byte HALF = 2;
+    private static final byte CCW  = 3;
+
+    // Rotate two bytes
+    private static void twoCycle(byte[] faceOne, int indexOne, byte[] faceTwo, int indexTwo) {
+
+        byte temp         = faceOne[indexOne];
+        faceOne[indexOne] = faceTwo[indexTwo];
+        faceTwo[indexTwo] = temp;
+    }
+
+    // Rotate four bytes
+    private static void fourCycle(byte[] faceOne,   int indexOne,   byte[] faceTwo,  int indexTwo,
+                                  byte[] faceThree, int indexThree, byte[] faceFour, int indexFour,
+                                  byte rotationType) {
 
         // The four bytes should be listed as when read clockwise!!
-        byte temp             = faceOne  [indexOne];
-        faceOne  [indexOne]   = faceFour [indexFour];
-        faceFour [indexFour]  = faceThree[indexThree];
-        faceThree[indexThree] = faceTwo  [indexTwo];
-        faceTwo  [indexTwo]   = temp;
+        if (rotationType == CW) {
+            byte temp             = faceOne  [indexOne];
+            faceOne  [indexOne]   = faceFour [indexFour];
+            faceFour [indexFour]  = faceThree[indexThree];
+            faceThree[indexThree] = faceTwo  [indexTwo];
+            faceTwo  [indexTwo]   = temp;
+        }
+        else if (rotationType == CCW) {
+            fourCycle(faceOne, indexOne, faceFour, indexFour, faceThree, indexThree, faceTwo, indexTwo, CW);
+        }
+        else if (rotationType == HALF) {
+            twoCycle(faceOne, indexOne, faceThree, indexThree);
+            twoCycle(faceTwo, indexTwo, faceFour,  indexFour);
+        }
+        else {
+            throw new IllegalArgumentException("Rotation type argument is not valid.");
+        }
     }
 
-    private static void fourCycleCW(byte[] face, int indexOne, int indexTwo, int indexThree, int indexFour) {
-        fourCycleCW(face, indexOne, face, indexTwo, face, indexThree, face, indexFour);
+    private static void fourCycle(byte[] face, int one, int two, int three, int four, byte rotationType) {
+        fourCycle(face, one, face, two, face, three, face, four, rotationType);
     }
 
-    /*
-    // Rotate four bytes in a counterclockwise manner
-    private static void fourCycleCCW(byte[] faceOne,   int indexOne,   byte[] faceTwo,  int indexTwo,
-                                     byte[] faceThree, int indexThree, byte[] faceFour, int indexFour) {
-
-        // Recast as a clockwise rotation
-        fourCycleCW(faceOne, indexOne, faceFour, indexFour, faceThree, indexThree, faceTwo, indexTwo);
-    }
-
-    private static void fourCycleCCW(byte[] face, int indexOne, int indexTwo, int indexThree, int indexFour) {
-        fourCycleCCW(face, indexOne, face, indexTwo, face, indexThree, face, indexFour);
-    }
-     */
-
-    // Rotating a frontFace clockwise
-    private static void CW(byte[] frontFace, byte[] topFace, byte[] rightFace, byte[] botFace, byte[] leftFace) {
+    // Rotating a cube face
+    private static void rotateFace(byte[] frontFace, byte[] topFace,  byte[] rightFace,
+                                   byte[] botFace,   byte[] leftFace, byte   rotationType) {
 
         // The four bytes should be listed as when read clockwise!!
 
         // Rotate the front corners
-        fourCycleCW(frontFace, 0, 2, 7, 5);
+        fourCycle(frontFace, 0, 2, 7, 5, rotationType);
 
         // Rotate the front edges
-        fourCycleCW(frontFace, 1, 4, 6, 3);
+        fourCycle(frontFace, 1, 4, 6, 3, rotationType);
 
         // Rotate outside 'left' corners
-        fourCycleCW(topFace, 7, rightFace, 2, botFace, 5, leftFace, 0);
+        fourCycle(topFace, 7, rightFace, 2, botFace, 5, leftFace, 0, rotationType);
 
         // Rotate outside edges
-        fourCycleCW(topFace, 4, rightFace, 1, botFace, 6, leftFace, 3);
+        fourCycle(topFace, 4, rightFace, 1, botFace, 6, leftFace, 3, rotationType);
 
         // Rotate outside 'right' corners
-        fourCycleCW(topFace, 2, rightFace, 0, botFace, 7, leftFace, 5);
+        fourCycle(topFace, 2, rightFace, 0, botFace, 7, leftFace, 5, rotationType);
     }
 
     // Well defined rotation notation from speed-cubing community
-    void U() {
-        CW(whiteFace, redFace, greenFace, orangeFace, blueFace);
+    void U (byte rotationType) {
+        rotateFace(whiteFace, redFace, greenFace, orangeFace, blueFace, rotationType);
     }
 
-    void R() {
-        CW(redFace, greenFace, whiteFace, blueFace, yellowFace);
+    void R (byte rotationType) {
+        rotateFace(redFace, greenFace, whiteFace, blueFace, yellowFace, rotationType);
     }
 
-    void F() {
-        CW(greenFace, whiteFace, redFace, yellowFace, orangeFace);
+    void F (byte rotationType) {
+        rotateFace(greenFace, whiteFace, redFace, yellowFace, orangeFace, rotationType);
     }
 
-    void D() {
-        CW(yellowFace, blueFace, orangeFace, greenFace, redFace);
+    void D (byte rotationType) {
+        rotateFace(yellowFace, blueFace, orangeFace, greenFace, redFace, rotationType);
     }
 
-    void L() {
-        CW(orangeFace, yellowFace, blueFace, whiteFace, greenFace);
+    void L (byte rotationType) {
+        rotateFace(orangeFace, yellowFace, blueFace, whiteFace, greenFace, rotationType);
     }
 
-    void B() {
-        CW(blueFace, orangeFace, yellowFace, redFace, whiteFace);
+    void B (byte rotationType) {
+        rotateFace(blueFace, orangeFace, yellowFace, redFace, whiteFace, rotationType);
     }
 
     // Default constructor
