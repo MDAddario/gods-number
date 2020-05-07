@@ -46,21 +46,25 @@ class Search {
 
         // Search for the solution
         int maxPly = 4;
-        startSearch(cube, maxPly);
+        Search search = new Search(maxPly);
+        search.bruteForce(cube);
     }
 
-    // Wrapper for brute force search
-    private static void startSearch(Cube cube, int maxPly) {
+    // Search engine attributes
+    private int maxPly;
 
-        // Create an array list to track the moves
-        ArrayList<Move> moveList = new ArrayList<>(maxPly);
+    // Constructor
+    Search(int maxPly) {
+        this.maxPly = maxPly;
+    }
 
-        // Begin the search
-        bruteForce(cube, 0, maxPly, (byte)-1, moveList);
+    // Begin the brute force search
+    private void bruteForce(Cube cube) {
+        bruteForce(cube, 0, (byte)-1, new ArrayList<>(this.maxPly));
     }
 
     // Brute force search all possible scrambles
-    private static void bruteForce(Cube cube, int ply, int maxPly, byte lastFace, ArrayList<Move> moveList) {
+    private void bruteForce(Cube cube, int ply, byte lastFace, ArrayList<Move> moveList) {
 
         // Check if the cube is solved
         if (cube.isSolved()) {
@@ -70,7 +74,7 @@ class Search {
         }
 
         // Terminate the search
-        if (ply == maxPly)
+        if (ply == this.maxPly)
             return;
 
         // Rotate all faces
@@ -96,7 +100,7 @@ class Search {
                 moveList.add(new Move(faceIndex, rotationType));
 
                 // Search new state
-                bruteForce(cube, ply + 1, maxPly, faceIndex, moveList);
+                bruteForce(cube, ply + 1, faceIndex, moveList);
 
                 // Undo rotation
                 cube.undoRotate(faceIndex, rotationType);
