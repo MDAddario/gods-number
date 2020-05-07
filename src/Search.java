@@ -45,9 +45,15 @@ class Search {
         cube.U(Cube.CCW);
 
         // Search for the solution
-        int maxPly = 4;
+        int maxPly = 8;
         Search search = new Search(maxPly);
+
+        // Time the runtime
+        long startTime = System.currentTimeMillis();
         search.bruteForce(cube);
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Runtime: " + (int)((endTime - startTime) / 1000) + " seconds.");
     }
 
     // Search engine attributes
