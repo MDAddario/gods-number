@@ -8,7 +8,7 @@ class Cube {
     byte[] orangeFace;
     byte[]   blueFace;
 
-    // Color definitions
+    // Color definitions (opposite faces are equal modulo 3)
     static final byte WHITE  = 0;
     static final byte RED    = 1;
     static final byte GREEN  = 2;

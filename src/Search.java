@@ -17,6 +17,7 @@ class Search {
 
             StringBuilder output = new StringBuilder();
 
+            // Format face
             if      (this.faceIndex == Cube.WHITE)  output.append("U");
             else if (this.faceIndex == Cube.RED)    output.append("R");
             else if (this.faceIndex == Cube.GREEN)  output.append("F");
@@ -24,9 +25,9 @@ class Search {
             else if (this.faceIndex == Cube.ORANGE) output.append("L");
             else if (this.faceIndex == Cube.BLUE)   output.append("B");
 
-            if      (this.rotationType == Cube.CW)   output.append(" ");
-            else if (this.rotationType == Cube.HALF) output.append("2 ");
-            else if (this.rotationType == Cube.CCW)  output.append("' ");
+            // Format rotation type
+            if      (this.rotationType == Cube.HALF) output.append("2");
+            else if (this.rotationType == Cube.CCW)  output.append("'");
 
             return output.toString();
         }
@@ -52,7 +53,7 @@ class Search {
     private static void startSearch(Cube cube, int maxPly) {
 
         // Create an array list to track the moves
-        ArrayList<Move> moveList = new ArrayList<>();
+        ArrayList<Move> moveList = new ArrayList<>(maxPly);
 
         // Begin the search
         bruteForce(cube, 0, maxPly, (byte)-1, moveList);
@@ -63,7 +64,7 @@ class Search {
 
         // Check if the cube is solved
         if (cube.isSolved()) {
-            System.out.println("Cube solved after " + ply + " moves.\n");
+            System.out.println("Cube solved after " + ply + " moves.");
             System.out.println(moveList);
             return;
         }
