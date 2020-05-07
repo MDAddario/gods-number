@@ -220,6 +220,19 @@ class Cube {
         this.setupRotations();
     }
 
+    // Cloning constructor
+    Cube(Cube cube) {
+
+        this. whiteFace = cube. whiteFace.clone();
+        this.   redFace = cube.   redFace.clone();
+        this. greenFace = cube. greenFace.clone();
+        this.yellowFace = cube.yellowFace.clone();
+        this.orangeFace = cube.orangeFace.clone();
+        this.  blueFace = cube.  blueFace.clone();
+
+        this.rotations = cube.rotations.clone();
+    }
+
     // Method for imageIO
     void saveImage() {
         ImageProcessing.saveCubeImage(this);

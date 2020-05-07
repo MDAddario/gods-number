@@ -33,6 +33,31 @@ class Search {
         }
     }
 
+    private static class State {
+
+        // Attributes
+        Cube            cube;
+        int             ply;
+        byte            lastFace;
+        ArrayList<Move> moveList;
+
+        // Root state
+        private State(Cube cube) {
+            this.cube     = cube;
+            this.ply      = 0;
+            this.lastFace = -1;
+            this.moveList = new ArrayList<>();
+        }
+
+        // Cloning state
+        private State(Cube cube, int ply, byte faceIndex, ArrayList<Move> moveList) {
+            this.cube     = new Cube(cube);
+            this.ply      = ply + 1;
+            this.lastFace = faceIndex;
+            this.moveList = new ArrayList<>(moveList);
+        }
+    }
+
     public static void main(String[] args) {
 
         // Create a fresh cube
