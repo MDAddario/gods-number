@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 class Search {
 
@@ -50,11 +51,11 @@ class Search {
         }
 
         // Cloning state
-        private State(Cube cube, int ply, byte faceIndex, ArrayList<Move> moveList) {
-            this.cube     = new Cube(cube);
-            this.ply      = ply + 1;
+        private State(State state, byte faceIndex) {
+            this.cube     = new Cube(state.cube);
+            this.ply      = state.ply + 1;
             this.lastFace = faceIndex;
-            this.moveList = new ArrayList<>(moveList);
+            this.moveList = new ArrayList<>(state.moveList);
         }
     }
 
@@ -71,61 +72,57 @@ class Search {
 
         // Search for the solution
         int maxPly = 4;
-        startSearch(cube, maxPly);
+        breadthFirst(cube, maxPly);
     }
 
-    // Wrapper for brute force search
-    private static void startSearch(Cube cube, int maxPly) {
+    // Breadth first style search
+    private static void breadthFirst(Cube initialCube, int maxPly) {
 
-        // Create an array list to track the moves
-        ArrayList<Move> moveList = new ArrayList<>(maxPly);
+        // Start fresh with the scrambled cube
+        LinkedList<State> queue = new LinkedList<>();
+        queue.add(new State(initialCube));
 
-        // Begin the search
-        bruteForce(cube, 0, maxPly, (byte)-1, moveList);
-    }
+        while (!queue.isEmpty()) {
 
-    // Brute force search all possible scrambles
-    private static void bruteForce(Cube cube, int ply, int maxPly, byte lastFace, ArrayList<Move> moveList) {
+            // Isolate the current state
+            State state = queue.removeFirst();
 
-        // Check if the cube is solved
-        if (cube.isSolved()) {
-            System.out.println("Cube solved after " + ply + " moves.");
-            System.out.println(moveList);
-            return;
-        }
-
-        // Terminate the search
-        if (ply == maxPly)
-            return;
-
-        // Rotate all faces
-        for (byte faceIndex = 0; faceIndex < 6; faceIndex++) {
-
-            // Truncate search space based off last rotation
-            if (ply != 0) {
-
-                // Avoid rotating same face twice
-                if (faceIndex == lastFace)
-                    continue;
-
-                // When rotating opposite faces, set one allowed ordering
-                if ((faceIndex % 3 == lastFace % 3) && faceIndex >= 3)
-                    continue;
+            // Check if the cube is solved
+            if (state.cube.isSolved()) {
+                System.out.println("Cube solved after " + state.ply + " moves.");
+                System.out.println(state.moveList);
+                return;
             }
 
-            // Perform all types of rotations
-            for (byte rotationType = 1; rotationType <= 3; rotationType++) {
+            // Terminate the search if max depth is reached
+            if (state.ply == maxPly)
+                return;
 
-                // Rotate
-                cube.rotate(faceIndex, rotationType);
-                moveList.add(new Move(faceIndex, rotationType));
+            // Rotate all faces
+            for (byte faceIndex = 0; faceIndex < 6; faceIndex++) {
 
-                // Search new state
-                bruteForce(cube, ply + 1, maxPly, faceIndex, moveList);
+                // Truncate search space based off last rotation
+                if (state.ply != 0) {
 
-                // Undo rotation
-                cube.undoRotate(faceIndex, rotationType);
-                moveList.remove(moveList.size() - 1);
+                    // Avoid rotating same face twice
+                    if (faceIndex == state.lastFace)
+                        continue;
+
+                    // When rotating opposite faces, set one allowed ordering
+                    if ((faceIndex % 3 == state.lastFace % 3) && faceIndex >= 3)
+                        continue;
+                }
+
+                // Perform all types of rotations
+                for (byte rotationType = 1; rotationType <= 3; rotationType++) {
+
+                    // Rotate
+                    state.cube.rotate(faceIndex, rotationType);
+                    state.moveList.add(new Move(faceIndex, rotationType));
+
+                    // Search new state
+                    queue.addLast(new State(state, faceIndex));
+                }
             }
         }
     }
