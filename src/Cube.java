@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 class Cube {
 
     // Faces of the cube
@@ -223,5 +225,36 @@ class Cube {
     // Method for imageIO
     void saveImage() {
         ImageProcessing.saveCubeImage(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Cube)
+            return (Arrays.equals(this. whiteFace, ((Cube) obj).whiteFace)  &&
+                    Arrays.equals(this.   redFace, ((Cube) obj).redFace)    &&
+                    Arrays.equals(this. greenFace, ((Cube) obj).greenFace)  &&
+                    Arrays.equals(this.yellowFace, ((Cube) obj).yellowFace) &&
+                    Arrays.equals(this.orangeFace, ((Cube) obj).orangeFace) &&
+                    Arrays.equals(this.  blueFace, ((Cube) obj).blueFace));
+        return false;
+    }
+
+    private int faceSum(byte faceIndex) {
+
+        byte[][] array = {whiteFace, redFace, greenFace, yellowFace, orangeFace, blueFace};
+
+        int sum = 0;
+        for (int i = 0; i < 8; i++)
+            sum += array[faceIndex][i];
+        return sum;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int sum = 0;
+        for (byte i = 0; i < 6; i++)
+            sum = 31 * sum + faceSum(i);
+        return sum;
     }
 }

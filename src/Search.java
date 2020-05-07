@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class Search {
 
@@ -57,11 +58,13 @@ class Search {
     }
 
     // Search engine attributes
-    private int maxPly;
+    private int                    maxPly;
+    private HashMap<Cube, Boolean> hash;
 
     // Constructor
     Search(int maxPly) {
         this.maxPly = maxPly;
+        this.hash   = new HashMap<>();
     }
 
     // Begin the brute force search
@@ -81,6 +84,10 @@ class Search {
 
         // Terminate the search
         if (ply == this.maxPly)
+            return;
+
+        // Ignore the node if already visited the cube
+        if (this.hash.put(cube, true) != null)
             return;
 
         // Rotate all faces
